@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bakers & Brewers - Order</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="stylesboot.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-brand-border">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="index.html">
+      <img src="transparentlogo.png" height="60px">
+    </a>
+    <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarMenu">
+      <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="menu.html">Menu</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">Location</a></li>
+        <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+          <a class="btn btn-warning rounded-pill px-4 fw-bold shadow-sm" href="checkout.html">
+            Cart <span id="nav-cart-count" class="badge bg-dark text-white ms-1">0</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container my-5 p-4 shadow rounded bg-white order-card">
+  <div class="row g-5 align-items-center">
+
+    <div class="col-md-5 text-center">
+      <img id="order-item-image" class="img-fluid rounded shadow w-100 order-main-img" 
+           alt="Loading..."
+           onerror="this.onerror=null; this.src='https://placehold.co/500x500?text=No+Image'">
+    </div>
+
+    <div class="col-md-7">
+      <h2 id="order-item-name" class="fw-bold display-5 mb-3">Loading Product...</h2>
+      <p id="order-item-desc" class="text-muted mb-4">Please wait...</p>
+
+      <div id="options-container">
+        <h6 class="fw-bold">SIZE:</h6>
+        <div class="mb-3">
+           <button class="btn btn-size active" data-cost="0">REGULAR</button>
+           <button class="btn btn-size" data-cost="20">LARGE (+₱20)</button>
+        </div>
+
+        <h6 class="fw-bold">TEMPERATURE:</h6>
+        <div class="mb-4">
+           <button class="btn btn-temp active" data-val="HOT">HOT</button>
+           <button class="btn btn-temp" data-val="COLD">COLD</button>
+        </div>
+      </div>
+
+      <h6 class="fw-bold">QUANTITY:</h6>
+      <div class="d-flex align-items-center mb-4">
+        <button id="minus" class="qty-btn shadow-sm">−</button>
+        <span id="quantity" class="mx-3 fs-4 fw-bold">1</span>
+        <button id="plus" class="qty-btn shadow-sm">+</button>
+      </div>
+
+      <hr>
+
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h6 class="mb-0">TOTAL PRICE:</h6>
+          <div class="total-box">₱ <span id="total-price">0.00</span></div>
+        </div>
+        <button class="btn btn-dark btn-lg px-5 rounded-pill" onclick="addToCart()">ADD TO CART</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  let currentBasePrice = 0;
+  let currentSizeCost = 0;
+  let currentQuantity = 1;
+  let currentProduct = null;
+  let selectedSize = "Regular"; 
+  let selectedTemp = "Hot"; 
+
+  async function initOrderPage() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+
+    if (!productId) {
+      window.location.href = 'menu.html';
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:4000/api/products');
+      const products = await response.json();
+      const product = products.find(p => p.product_id == productId);
+
+      if (!product) return;
+
+      currentProduct = product;
+      currentBasePrice = parseFloat(product.base_price);
+
+      document.getElementById('order-item-name').innerText = product.product_name;
+      document.getElementById('order-item-desc').innerText = product.description || "Freshly prepared.";
+      
+      const imgEl = document.getElementById('order-item-image');
+      imgEl.src = `menu/${product.product_name}.jpg`;
+      imgEl.alt = product.product_name;
+
+      const type = product.product_type ? product.product_type.toUpperCase().trim() : "UNKNOWN";
+      const optionsDiv = document.getElementById('options-container');
+      
+      if (type === 'FOOD') {
+        optionsDiv.style.display = 'none';
+        selectedSize = "Standard"; 
+        selectedTemp = "Standard";
+      } else {
+        optionsDiv.style.display = 'block';
+      }
+
+      updateTotal();
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  document.querySelectorAll('.btn-size').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.btn-size').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      
+      currentSizeCost = parseFloat(this.getAttribute('data-cost'));
+      selectedSize = this.innerText.split(' ')[0];
+      
+      updateTotal();
+    });
+  });
+
+  document.querySelectorAll('.btn-temp').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.btn-temp').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      selectedTemp = this.getAttribute('data-val');
+    });
+  });
+
+  document.getElementById('plus').addEventListener('click', () => {
+    currentQuantity++;
+    updateUI();
+  });
+
+  document.getElementById('minus').addEventListener('click', () => {
+    if (currentQuantity > 1) {
+      currentQuantity--;
+      updateUI();
+    }
+  });
+
+  function updateUI() {
+    document.getElementById('quantity').innerText = currentQuantity;
+    updateTotal();
+  }
+
+  function updateTotal() {
+    const total = (currentBasePrice + currentSizeCost) * currentQuantity;
+    document.getElementById('total-price').innerText = total.toFixed(2);
+  }
+
+  function addToCart() {
+    if(!currentProduct) return;
+
+    const finalPrice = (currentBasePrice + currentSizeCost);
+    const orderItem = {
+      id: currentProduct.product_id,
+      name: currentProduct.product_name,
+      image: currentProduct.product_name, 
+      price: finalPrice,
+      quantity: currentQuantity,
+      size: selectedSize,
+      temp: selectedTemp,
+      totalCost: finalPrice * currentQuantity
+    };
+
+    let cart = JSON.parse(localStorage.getItem('bb_cart')) || [];
+    cart.push(orderItem);
+    localStorage.setItem('bb_cart', JSON.stringify(cart));
+    
+    // Update navbar count immediately
+    updateNavCartCount();
+
+    if(confirm("Added to Cart! \nClick OK to Checkout now, or Cancel to keep browsing.")) {
+        window.location.href = "checkout.html";
+    } else {
+        window.location.href = "menu.html";
+    }
+  }
+
+  function updateNavCartCount() {
+    const cart = JSON.parse(localStorage.getItem('bb_cart')) || [];
+    const badge = document.getElementById('nav-cart-count');
+    if(badge) badge.innerText = cart.length;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initOrderPage();
+    updateNavCartCount();
+  });
+</script>
+</body>
+</html>

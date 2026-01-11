@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bakers & Brewers - Menu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="stylesboot.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-brand-border">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="index.html">
+      <img src="transparentlogo.png" height="60px">
+    </a>
+    <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarMenu">
+      <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" href="menu.html">Menu</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">Location</a></li>
+        <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+          <a class="btn btn-warning rounded-pill px-4 fw-bold shadow-sm" href="checkout.html">
+            Cart <span id="nav-cart-count" class="badge bg-dark text-white ms-1">0</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section class="container py-5 menu-section">
+  <h2 class="page-title">OUR MENU</h2>
+
+  <div class="text-center mb-4 d-none d-md-block">
+    <button class="btn btn-outline-dark mx-1 menu-tab-btn active" data-target="beverages">Beverages</button>
+    <button class="btn btn-outline-dark mx-1 menu-tab-btn" data-target="food">Food</button>
+  </div>
+
+  <div class="text-center mb-3 d-md-none">
+    <small>Swipe left or right to view Food or Beverages</small>
+  </div>
+
+  <div class="menu-items">
+    <div class="menu-slider">
+      
+      <div class="menu-tab active" id="beverages">
+        <div class="row g-4" id="beverage-container">
+           </div>
+      </div>
+
+      <div class="menu-tab" id="food">
+        <div class="row g-4" id="food-container">
+           </div>
+      </div>
+
+    </div> 
+  </div>
+</section>
+
+<a href="checkout.html" class="floating-cart-btn text-decoration-none">
+  <div class="d-flex align-items-center">
+    <span class="fs-4 me-2">🛒</span>
+    <span class="fw-bold">Checkout</span>
+    <span id="float-cart-count" class="badge bg-white text-dark ms-2 rounded-pill">0</span>
+  </div>
+</a>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+async function loadMenu() {
+  const beverageContainer = document.getElementById('beverage-container');
+  const foodContainer = document.getElementById('food-container');
+
+  if (!beverageContainer || !foodContainer) return;
+
+  try {
+    const response = await fetch('http://localhost:4000/api/products');
+    const products = await response.json();
+
+    let beverageHTML = '';
+    let foodHTML = '';
+
+    products.forEach(product => {
+      // Replaced inline style with class 'menu-card-img'
+      const imageHTML = `
+        <img src="menu/${product.product_name}.jpg" 
+             class="img-fluid mb-2 rounded menu-card-img" 
+             alt="${product.product_name}" 
+             onerror="this.onerror=null; this.src='https://placehold.co/300x200?text=No+Image'">`;
+
+      const itemHTML = `
+        <div class="col-6 col-md-4 text-center mb-4">
+          <a href="orderpage.html?id=${product.product_id}" class="text-decoration-none text-dark">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body p-2">
+                ${imageHTML}
+                <p class="fw-bold item-name text-uppercase mt-2">${product.product_name}</p>
+                <p class="text-muted small">₱ ${product.base_price}</p>
+              </div>
+            </div>
+          </a>
+        </div>
+      `;
+
+      const type = product.product_type ? product.product_type.toUpperCase().trim() : "";
+      
+      if (type === 'BEVERAGE') {
+        beverageHTML += itemHTML;
+      } else if (type === 'FOOD') {
+        foodHTML += itemHTML;
+      }
+    });
+
+    beverageContainer.innerHTML = beverageHTML;
+    foodContainer.innerHTML = foodHTML;
+
+  } catch (error) {
+    console.error('Error loading menu:', error);
+    beverageContainer.innerHTML = '<p class="text-danger">Menu could not be loaded.</p>';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  loadMenu();
+  updateNavCartCount();
+
+  /* TAB & SWIPE LOGIC */
+  const tabButtons = Array.from(document.querySelectorAll('.menu-tab-btn'));
+  const tabs = Array.from(document.querySelectorAll('.menu-tab'));
+  const slider = document.querySelector('.menu-slider');
+  let currentIndex = 0;
+
+  function activateTab(index) {
+    currentIndex = index;
+    slider.style.transform = `translateX(-${index * 100}%)`;
+    tabs.forEach((tab, i) => tab.classList.toggle('active', i === index));
+    tabButtons.forEach((btn, i) => btn.classList.toggle('active', i === index));
+  }
+
+  tabButtons.forEach((btn, i) => {
+    btn.addEventListener('click', () => activateTab(i));
+  });
+
+  let startX = 0;
+  if(slider) {
+      slider.addEventListener('touchstart', e => startX = e.changedTouches[0].screenX, { passive: true });
+      slider.addEventListener('touchend', e => {
+        let diff = e.changedTouches[0].screenX - startX;
+        if (Math.abs(diff) < 50) return;
+        if (diff < 0 && currentIndex < tabs.length - 1) activateTab(currentIndex + 1);
+        if (diff > 0 && currentIndex > 0) activateTab(currentIndex - 1);
+      });
+  }
+});
+
+function updateNavCartCount() {
+  const cart = JSON.parse(localStorage.getItem('bb_cart')) || [];
+  const navBadge = document.getElementById('nav-cart-count');
+  const floatBadge = document.getElementById('float-cart-count');
+  if(navBadge) navBadge.innerText = cart.length;
+  if(floatBadge) floatBadge.innerText = cart.length;
+}
+</script>
+</body>
+</html>

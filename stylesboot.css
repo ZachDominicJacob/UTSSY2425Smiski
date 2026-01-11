@@ -1,0 +1,247 @@
+/* =========================================
+   GLOBAL VARIABLES & FONTS
+   ========================================= */
+:root {
+  --brand-gold: #a2783b;
+  --brand-dark: #212529;
+  --bg-light: #f8f9fa;
+}
+
+body {
+  font-family: 'Nunito Sans', sans-serif;
+  background-image: url('bodybg.jpg'); /* Preserving your original bg if exists */
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: 'Playfair Display', serif;
+}
+
+background-container {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* =========================================
+   NAVBAR STYLES
+   ========================================= */
+.navbar-brand-border {
+  border-bottom: 2px solid var(--brand-gold) !important;
+  background-color: #fff; /* Ensure readable background */
+}
+
+/* =========================================
+   INDEX PAGE (HOME)
+   ========================================= */
+.carousel-custom-img {
+  height: 500px;
+  object-fit: cover;
+  filter: brightness(0.7);
+}
+
+.carousel-caption-bg {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.featured-image {
+  max-height: 400px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.featured-title {
+  color: var(--brand-dark);
+  font-weight: 700;
+}
+
+/* =========================================
+   MENU PAGE
+   ========================================= */
+
+  
+.menu-section {
+  min-height: 80vh;
+}
+
+.menu-items {
+  overflow: hidden;
+}
+
+.menu-slider {
+  width: 100%;
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+}
+
+.menu-tab {
+  min-width: 100%;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.menu-tab.active {
+  opacity: 1;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--brand-dark);
+}
+
+/* Menu Toggle Buttons */
+.menu-tab-btn.active {
+  background-color: var(--brand-dark);
+  color: white;
+  border-color: var(--brand-dark);
+}
+
+/* Menu Item Images */
+.menu-card-img {
+  height: 200px;
+  object-fit: cover;
+  width: 100%;
+}
+
+/* Floating Cart Button */
+.floating-cart-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: var(--brand-dark);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 50px;
+  z-index: 1000;
+  transition: transform 0.2s;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.floating-cart-btn:hover {
+  transform: scale(1.05);
+  color: #ffd700; /* Gold text on hover */
+}
+
+/* =========================================
+   ORDER PAGE
+   ========================================= */
+.order-card {
+  background: white;
+  border-radius: 15px;
+}
+
+.order-main-img {
+  height: 400px; 
+  object-fit: cover;
+}
+
+/* Custom Buttons (Size, Temp) */
+.btn-select, 
+.btn-size, 
+.btn-temp {
+  border: 1px solid #ced4da;
+  background: #fff;
+  color: #333;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  transition: all 0.2s;
+}
+
+.btn-select.active, 
+.btn-size.active, 
+.btn-temp.active {
+  background-color: var(--brand-dark);
+  color: #fff;
+  border-color: var(--brand-dark);
+}
+
+/* Quantity Controls */
+.qty-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #ced4da;
+  background: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.qty-btn:hover {
+  background-color: #e9ecef;
+}
+
+.total-box {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--brand-gold);
+}
+.checkout-button {
+  background-color: var(--brand-dark);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.2s;
+}
+
+/* =========================================
+   ABOUT / LOCATION PAGE
+   ========================================= */
+.map-container {
+  height: 100%;
+  min-height: 450px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  border: 1px solid #dee2e6;
+}
+
+.contact-card {
+  background: white;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+/* Icon Circles */
+.icon-box {
+  width: 45px;
+  height: 45px;
+  background-color: var(--bg-light);
+  color: var(--brand-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-right: 15px;
+  font-size: 1.2rem;
+}
+
+.contact-link {
+  transition: color 0.2s;
+}
+
+.contact-link:hover {
+  color: var(--brand-gold) !important;
+}
+
+/* =========================================
+   CHECKOUT PAGE
+   ========================================= */
+.cart-thumb-img {
+  width: 80px; 
+  height: 80px; 
+  object-fit: cover;
+}

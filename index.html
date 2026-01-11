@@ -1,198 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Talking Smiski</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-image: url('assets/bg-home.png');
-            background-size: cover;
-            background-position: center;
-            font-family: Arial, sans-serif;
-            position: relative;
-            transition: background-color 0.5s ease; /* Add transition for smooth color change */
-        }
-
-        #click-button {
-            width: 300px;
-            height: 300px;
-            background-image: url('assets/button.png');
-            background-size: cover;
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            position: absolute;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        #quote-box, #opened-box, #floating-smiskis, #quote {
-            display: none;
-        }
-
-        #quote-box {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-image: url('assets/shaking-box.png');
-            background-size: cover;
-            width: 300px;
-            height: 300px;
-            animation: shake 0.5s infinite alternate;
-        }
-
-        @keyframes shake {
-            0% { transform: translate(-50%, 0) rotate(0deg); }
-            100% { transform: translate(-50%, 0) rotate(10deg); }
-        }
-
-        #opened-box {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-image: url('assets/open-box.png');
-            background-size: cover;
-            width: 300px;
-            height: 300px;
-        }
-
-        #quote {
-            position: absolute;
-            top: 20%;
-            left: 50%;
-            transform: translate(-50%, 50%);
-            text-align: center;
-            display: none;
-            background-size: contain;
-            width: 300px;
-            height: 300px;
-            animation: slide-up 1s forwards;
-        }
-
-        @keyframes slide-up {
-            0% { transform: translate(-50%, 50%); opacity: 0; }
-            100% { transform: translate(-50%, 10%); opacity: 1; }
-        }
-
-        #floating-smiskis {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translateX(-50%);
-            display: none;
-            width: 420px;
-            justify-content: space-between;
-        }
-
-        .smiski {
-            width: 100px;
-            height: 100px;
-        }
-
-        @keyframes float-up-down {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-20px); }
-        }
-
-        @keyframes float-down-up {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(20px); }
-        }
-
-        #smiski-left {
-            animation: float-up-down 2s infinite alternate;
-        }
-
-        #smiski-right {
-            animation: float-down-up 2s infinite alternate;
-        }
-
-        #back-button {
-            position: absolute;
-            top: -60px;
-            left: -30px;
-            width: 200px;
-            height: 200px;
-            background-image: url('assets/back-button.png');
-            background-size: cover;
-            cursor: pointer;
-            z-index: 100;
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bakers & Brewers - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="stylesboot.css">
 </head>
-<body>
-    <!-- "Click Me" Button -->
-    <button id="click-button" onclick="startSequence()"></button>
 
-    <!-- Shaking Box, Opened Box, Random Quote, and Floating Smiskis -->
-    <div id="quote-box"></div>
-    <div id="opened-box"></div>
-    <div id="quote"></div>
-    <div id="floating-smiskis">
-        <img id="smiski-left" class="smiski" src="" alt="smiski">
-        <img id="smiski-right" class="smiski" src="" alt="smiski">
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-brand-border">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="index.html">
+      <img src="transparentlogo.png" height="60px">
+    </a>
+    <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarMenu">
+      <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="menu.html">Menu</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">Location</a></li>
+        <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+          <a class="btn btn-warning rounded-pill px-4 fw-bold shadow-sm" href="checkout.html">
+            Cart <span id="nav-cart-count" class="badge bg-dark text-white ms-1">0</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+  </div>
+  
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="menu/Brown Sugar Latte.jpg" class="d-block w-100 carousel-custom-img" alt="Coffee" 
+           onerror="this.onerror=null; this.src='https://placehold.co/800x500?text=Welcome';">
+      <div class="carousel-caption carousel-caption-bg d-block">
+        <h5>Wake Up with Our Signature Blends</h5>
+        <p>Freshly brewed to start your day right.</p>
+        <a href="menu.html" class="btn btn-warning">View Beverages</a>
+      </div>
+    </div>
+  </div>
+  
+  <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+  </button>
+</div>
+
+<section class="container py-5">
+  <div class="bg-white rounded shadow p-4 p-md-5"> 
+    
+    <div class="row align-items-center featured-item">
+      <div class="col-lg-6 mb-4 mb-lg-0">
+        <img src="b&bchocochunk.jpg" class="img-fluid featured-image rounded shadow" 
+             onerror="this.src='https://placehold.co/600x400?text=Featured+Item'">
+      </div>
+      <div class="col-lg-6">
+        <h2 class="mb-3 featured-title">CHOCOLATE CHUNK COOKIE</h2>
+        <p class="mb-3 featured-subtitle"><em>Soft, chewy, and extra-chunky.</em></p>
+        <p class="mb-4 featured-desc">
+          Our choco-chunk cookie is baked soft and chewy, filled with generous chunks of rich chocolate in every bite.
+        </p>
+        <a href="menu.html" class="btn btn-dark px-4 py-2 rounded-pill">See Full Menu</a>
+      </div>
     </div>
 
-    <!-- Back Button -->
-    <div id="back-button" onclick="window.location.reload()"></div>
+  </div> 
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+async function loadCarousel() {
+  const carouselContainer = document.querySelector('.carousel-inner');
+  if (!carouselContainer) return;
+
+  try {
+    const response = await fetch('http://localhost:4000/api/products');
+    const products = await response.json();
+
+    if (products.length === 0) return;
     
-    <!-- Gallery Button -->
-    <div id="gallery-button" onclick="location.href='gallery.html'" style="position: absolute; top: 20px; right: 20px; width: 50px; height: 50px; background-image: url('assets/gallery-icon.png'); background-size: cover; cursor: pointer;"></div>
+    const shuffled = products.sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, 3);
 
-    <script>
-        const quotes = [
-            'quote1.png', 'quote2.png', 'quote3.png', 'quote4.png', 'quote5.png',
-            'quote6.png', 'quote7.png', 'quote8.png', 'quote9.png', 'quote10.png',
-            'quote11.png', 'quote12.png', 'quote13.png', 'quote14.png', 'quote15.png',
-            'quote16.png', 'quote17.png', 'quote18.png', 'quote19.png', 'quote20.png'
-        ];
+    let slidesHTML = '';
 
-        const smiskis = [
-            'smiski1.png', 'smiski2.png', 'smiski3.png', 'smiski4.png', 'smiski5.png',
-            'smiski6.png', 'smiski7.png', 'smiski8.png', 'smiski9.png', 'smiski10.png'
-        ];
+    selected.forEach((product, index) => {
+      const isActive = index === 0 ? 'active' : '';
+      // CSS Class used here instead of inline style
+      slidesHTML += `
+        <div class="carousel-item ${isActive}">
+          <img src="menu/${product.product_name}.jpg" 
+               class="d-block w-100 carousel-custom-img" 
+               alt="${product.product_name}" 
+               onerror="this.onerror=null; this.src='https://placehold.co/800x500?text=Fresh+Brews';">
+          
+          <div class="carousel-caption carousel-caption-bg d-none d-md-block">
+            <h5 class="fw-bold display-6">${product.product_name}</h5>
+            <p class="fs-5">${product.description || 'Freshly made just for you.'}</p>
+            <a href="menu.html" class="btn btn-warning fw-bold mt-2">Order Now</a>
+          </div>
+        </div>
+      `;
+    });
 
-        function startSequence() {
-            document.getElementById('click-button').style.display = 'none';
-            
-            const quoteBox = document.getElementById('quote-box');
-            quoteBox.style.display = 'block';
+    carouselContainer.innerHTML = slidesHTML;
 
-            setTimeout(() => {
-                quoteBox.style.display = 'none';
-                document.getElementById('opened-box').style.display = 'block';
+  } catch (error) {
+    console.error('Error loading carousel:', error);
+  }
+}
 
-                const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-                const quote = document.getElementById('quote');
-                quote.style.display = 'block';
-                quote.style.backgroundImage = `url('assets/${randomQuote}')`;
+function updateNavCartCount() {
+  const cart = JSON.parse(localStorage.getItem('bb_cart')) || [];
+  const badge = document.getElementById('nav-cart-count');
+  if(badge) badge.innerText = cart.length;
+}
 
-                const leftSmiski = smiskis[Math.floor(Math.random() * smiskis.length)];
-                const rightSmiski = smiskis[Math.floor(Math.random() * smiskis.length)];
-                document.getElementById('smiski-left').src = `assets/${leftSmiski}`;
-                document.getElementById('smiski-right').src = `assets/${rightSmiski}`;
-                document.getElementById('floating-smiskis').style.display = 'flex';
-
-                document.getElementById('back-button').style.display = 'block';
-                document.getElementById('gallery-button').style.display = 'block';
-            }, 3000);
-        }
-    </script>
+document.addEventListener('DOMContentLoaded', () => {
+  loadCarousel();
+  updateNavCartCount();
+});
+</script>
 </body>
 </html>
